@@ -1,6 +1,7 @@
 package com.vishalpal555.employeeManagement.service.implementation;
 
 import com.vishalpal555.employeeManagement.CustomException.UsernameAlreadyPresent;
+import com.vishalpal555.employeeManagement.pojo.Employee;
 import com.vishalpal555.employeeManagement.pojo.Vendor;
 import com.vishalpal555.employeeManagement.repository.VendorRepoInterface;
 import com.vishalpal555.employeeManagement.service.VendorService;
@@ -9,7 +10,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.FileNotFoundException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class VendorServiceImpl implements VendorService {
@@ -40,5 +43,15 @@ public class VendorServiceImpl implements VendorService {
     @Override
     public boolean deleteVendor(String email) {
         return vendorRepoInterface.deleteByEmail(email);
+    }
+
+    @Override
+    public Optional<Vendor> getVendorByEmail(String email){
+        return vendorRepoInterface.findByEmail(email);
+    }
+
+    @Override
+    public Optional<Vendor> getVendorById(Long id){
+        return vendorRepoInterface.findById(id);
     }
 }
