@@ -1,5 +1,6 @@
 package com.vishalpal555.employeeManagement.service.implementation;
 
+import com.vishalpal555.employeeManagement.CustomException.UpiIdAlreadyPresent;
 import com.vishalpal555.employeeManagement.CustomException.UsernameAlreadyPresent;
 import com.vishalpal555.employeeManagement.pojo.Employee;
 import com.vishalpal555.employeeManagement.pojo.Vendor;
@@ -27,9 +28,16 @@ public class VendorServiceImpl implements VendorService {
     }
 
     @Override
-    public void saveVendor(Vendor vendor) throws UsernameAlreadyPresent {
+    public boolean isUpiIdPresent(String upiId) {
+        return vendorRepoInterface.findByUpiId(upiId).isPresent();
+    }
+
+    @Override
+    public void saveVendor(Vendor vendor) throws UsernameAlreadyPresent, UpiIdAlreadyPresent {
         if(this.isVendorPresent(vendor.getEmail())){
             throw new UsernameAlreadyPresent(vendor.getEmail());
+        } else if (isUpiIdPresent(vendor.getUpiId())) {
+            throw new UpiIdAlreadyPresent(vendor.getUpiId());
         } else {
             vendorRepoInterface.save(vendor);
         }

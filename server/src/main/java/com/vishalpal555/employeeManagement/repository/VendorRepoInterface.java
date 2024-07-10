@@ -21,4 +21,10 @@ public interface VendorRepoInterface extends JpaRepository<Vendor, Long> {
             nativeQuery = true
     )
     boolean deleteByEmail(@Param("email") String email);
+
+    @Query(
+            value = "SELECT * FROM vendors WHERE upi_id=:upi_id",
+            nativeQuery = true
+    )
+    Optional<Vendor> findByUpiId(@Param("upi_id") String upiId);
 }

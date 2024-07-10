@@ -1,17 +1,18 @@
 package com.vishalpal555.employeeManagement.controller;
 
+import com.vishalpal555.employeeManagement.CustomException.UpiIdAlreadyPresent;
+import com.vishalpal555.employeeManagement.CustomException.UsernameAlreadyPresent;
+import com.vishalpal555.employeeManagement.dto.EmployeeDTO;
 import com.vishalpal555.employeeManagement.pojo.EmailsSent;
 import com.vishalpal555.employeeManagement.pojo.Employee;
+import com.vishalpal555.employeeManagement.pojo.Vendor;
 import com.vishalpal555.employeeManagement.service.EmployeeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +43,20 @@ public class EmployeeController {
                         .map(ResponseEntity::ok)
                         .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
             }
+        } catch (Exception e){
+            LOGGER.error("handled exception ", e);
+        }
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
+    @PostMapping("/add")
+    public ResponseEntity<?> addVendor(@RequestBody EmployeeDTO employeeDTO){
+        try {
+            employeeService.saveEmployee(new Employee(employeeDTO.getEmail(), employeeDTO.getFirstName(), employeeDTO.getLastName(), employeeDTO.getDesignation(), employeeDTO.getCtc()));
+            return ResponseEntity.ok().build();
+        } catch (UsernameAlreadyPresent e) {
+            LOGGER.error("handled UsernameAlreadyPresent ", e);
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         } catch (Exception e){
             LOGGER.error("handled exception ", e);
         }
