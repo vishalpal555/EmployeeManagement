@@ -18,7 +18,7 @@ public class Init {
 
     @PostConstruct
     public void init() {
-        LOGGER.info("init application");
+        LOGGER.info("initialize application");
         try{
             this.setSuperUserIfAbsent();
         } catch (Exception e){
@@ -29,7 +29,7 @@ public class Init {
     private void setSuperUserIfAbsent(){
         final String superUsername = "vishalpal555@superuser.com";
         try {
-            User superUser = new User( superUsername,
+            User superUser = new User(superUsername,
                         "12345678",
                         UserRole.ADMIN
             );
