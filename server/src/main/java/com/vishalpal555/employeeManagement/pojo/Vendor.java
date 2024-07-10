@@ -12,7 +12,7 @@ public class Vendor {
     private String email;
     @Column
     private String name;
-    @Column
+    @Column(unique = true)
     private String upiId;
 
     public Vendor() {

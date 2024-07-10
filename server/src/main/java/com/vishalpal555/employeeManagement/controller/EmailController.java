@@ -53,7 +53,7 @@ public class EmailController {
     @GetMapping
     public ResponseEntity<?> getMails(@RequestParam(required = false) String recipient, @RequestParam(required = false) Long id){
         try {
-            LOGGER.info("called /mail?recipient={}", recipient);
+            LOGGER.info("called /mail recipient:{}, id:{}", Objects.requireNonNullElse(recipient, "PARAM_MISSING"), Objects.requireNonNullElse(id, "PARAM_MISSING"));
             if(recipient == null && id == null){
                 return emailService.getAllMails();
             } else if(recipient != null && id != null){
