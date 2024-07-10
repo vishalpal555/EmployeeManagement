@@ -38,8 +38,6 @@ public class RootController {
     private AuthenticationManager authenticationManager;
     @Autowired
     private JwtService jwtService;
-    @Autowired
-    private EmailService emailService;
 
     @PostMapping(path = "/register")
     public ResponseEntity<Object> register(@RequestBody RegisterRequestDTO registerRequestDTO) {
@@ -76,7 +74,6 @@ public class RootController {
         try{
             if(loginRequestDTO != null && loginRequestDTO.getUsername() != null && loginRequestDTO.getPassword() != null){
                 LOGGER.info("called /login requestBody: {}", loginRequestDTO);
-                String s = springSecurity.passwordEncoder().encode(loginRequestDTO.getPassword());
                 UserDetails userDetails = userService.loadUserByUsername(loginRequestDTO.getUsername());
                 if(springSecurity.passwordEncoder().matches(loginRequestDTO.getPassword(), userDetails.getPassword())) {
                     authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequestDTO.getUsername(), loginRequestDTO.getPassword()));
@@ -105,17 +102,6 @@ public class RootController {
             List<UserDTO> userDTOList = userService.getAllUsers();
             LOGGER.info("resp {}", userDTOList);
             return ResponseEntity.status(HttpStatus.OK).body(userDTOList);
-        } catch (Exception e){
-            LOGGER.error("handled exception ", e);
-        }
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-    }
-
-    @PostMapping("/sendMail")
-    public ResponseEntity<Object> sendMail(@RequestBody SendEmailRequestDTO sendEmailRequestDTO){
-        try {
-            LOGGER.info("called /sendMail requestBody: {}", sendEmailRequestDTO.toString());
-            return emailService.sendAndSaveEmail(sendEmailRequestDTO.getToEmail(), sendEmailRequestDTO.getSubject(), sendEmailRequestDTO.getBody());
         } catch (Exception e){
             LOGGER.error("handled exception ", e);
         }

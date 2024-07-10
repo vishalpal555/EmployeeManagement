@@ -15,6 +15,9 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class EmailServiceImpl implements EmailService {
     private static final Logger LOGGER = LoggerFactory.getLogger(EmailServiceImpl.class);
@@ -46,6 +49,51 @@ public class EmailServiceImpl implements EmailService {
             return ResponseEntity.ok().build();
         } catch (MessagingException e){
             LOGGER.error("handled MessagingException ", e);
+        } catch (Exception e){
+            LOGGER.error("handled exception ", e);
+        }
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
+    @Override
+    public ResponseEntity<List<EmailsSent>> getAllMails(){
+        try{
+            return ResponseEntity.status(HttpStatus.OK).body(emailsSentRepoInterface.findAll());
+        } catch (Exception e){
+            LOGGER.error("handled exception ", e);
+        }
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
+    @Override
+    public ResponseEntity<List<EmailsSent>> getMailByRecipient(String recipient){
+        try{
+            return ResponseEntity.status(HttpStatus.OK).body(emailsSentRepoInterface.findEmailsByRecipient(recipient));
+        } catch (Exception e){
+            LOGGER.error("handled exception ", e);
+        }
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
+    @Override
+    public ResponseEntity<List<EmailsSent>> getMailBySubject(String subject){
+        try{
+            return ResponseEntity.status(HttpStatus.OK).body(emailsSentRepoInterface.findEmailsBySubject(subject));
+        } catch (Exception e){
+            LOGGER.error("handled exception ", e);
+        }
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
+    @Override
+    public ResponseEntity<EmailsSent> getMailById(Long emailId){
+        try{
+            Optional<EmailsSent> emailsSentOptional = emailsSentRepoInterface.findById(emailId);
+            return emailsSentOptional
+                    .map(emailsSent ->
+                            ResponseEntity.status(HttpStatus.OK).body(emailsSent)
+                    )
+                    .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
         } catch (Exception e){
             LOGGER.error("handled exception ", e);
         }

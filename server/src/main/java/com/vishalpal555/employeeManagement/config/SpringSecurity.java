@@ -49,7 +49,9 @@ public class SpringSecurity {
                     // admin access
                     auth.requestMatchers("/addUser").hasAuthority(UserRole.ADMIN.name());
                     auth.requestMatchers("/getAllUsers").hasAuthority(UserRole.ADMIN.name());
-                    auth.requestMatchers("/sendMail").hasAuthority(UserRole.ADMIN.name());
+                    auth.requestMatchers("/mail/**").hasAuthority(UserRole.ADMIN.name());
+                    auth.requestMatchers("/employee/**").hasAuthority(UserRole.ADMIN.name());
+                    auth.requestMatchers("/vendor/**").hasAuthority(UserRole.ADMIN.name());
                 })
                 .sessionManagement(management ->management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .logout(httpSecurityLogoutConfigurer ->

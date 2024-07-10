@@ -22,10 +22,11 @@ public class EmailsSent {
     private LocalDateTime sentTime;
 
     public EmailsSent() {
-        sentTime = LocalDateTime.now();
+        this.sentTime = LocalDateTime.now();
     }
 
     public EmailsSent(String toEmail, String fromEmail, String body, String subject) {
+        this();
         this.toEmail = toEmail;
         this.fromEmail = fromEmail;
         this.body = body;

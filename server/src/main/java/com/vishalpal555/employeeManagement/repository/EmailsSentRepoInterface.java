@@ -13,8 +13,14 @@ import java.util.Optional;
 @Repository
 public interface EmailsSentRepoInterface extends JpaRepository<EmailsSent, Long> {
     @Query(
-            value = "SELECT * FROM users WHERE users.to_email=:to_email",
+            value = "SELECT * FROM emails_sent WHERE emails_sent.to_email=:to_email",
             nativeQuery = true
     )
-    List<EmailsSent> findEmailByRecipient(@Param("to_email") String toEmail);
+    List<EmailsSent> findEmailsByRecipient(@Param("to_email") String toEmail);
+
+    @Query(
+            value = "SELECT * FROM emails_sent WHERE emails_sent.subject=:subject",
+            nativeQuery = true
+    )
+    List<EmailsSent> findEmailsBySubject(@Param("subject") String subject);
 }
