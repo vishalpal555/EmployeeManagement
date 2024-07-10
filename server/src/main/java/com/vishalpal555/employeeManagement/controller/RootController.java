@@ -78,7 +78,6 @@ public class RootController {
                 LOGGER.info("called /login requestBody: {}", loginRequestDTO);
                 String s = springSecurity.passwordEncoder().encode(loginRequestDTO.getPassword());
                 UserDetails userDetails = userService.loadUserByUsername(loginRequestDTO.getUsername());
-                LOGGER.info("vishal {}", springSecurity.passwordEncoder().matches(loginRequestDTO.getPassword(), userDetails.getPassword()));
                 if(springSecurity.passwordEncoder().matches(loginRequestDTO.getPassword(), userDetails.getPassword())) {
                     authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequestDTO.getUsername(), loginRequestDTO.getPassword()));
                     final String jwt = jwtService.generateToken(userService.loadUserByUsername(loginRequestDTO.getUsername()));

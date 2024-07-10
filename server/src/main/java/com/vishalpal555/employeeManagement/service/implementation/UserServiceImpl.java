@@ -58,6 +58,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public void saveNewUser(String username, String password) throws UsernameAlreadyPresent {
         User newUser = new User(username, password, UserRole.ADMIN); // TODO user is added as ADMIN by default, can be later changed as per usecases
-        userRepoInterface.save(newUser);
+        saveUser(newUser);
     }
 }
