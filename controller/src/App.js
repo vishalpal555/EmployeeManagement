@@ -5,6 +5,9 @@ import "./App.css";
 import Employees from './components/Employees';
 import Vendors from './components/Vendors';
 import Emails from './components/Emails';
+import AddEmployee from './components/AddEmployee';
+import AddVendor from './components/AddVendor';
+import SendEmails from './components/SendEmails';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -36,6 +39,15 @@ function App() {
             <li>
               <Link to="/login">Login</Link>
             </li>
+            <li>
+              <Link to="/addEmployee">Add Employee</Link>
+            </li>
+            <li>
+              <Link to="/addVendor">Add Vendor</Link>
+            </li>
+            <li>
+              <Link to="/sendMails">Send Mails</Link>
+            </li>
           </ul>
         </nav>
 
@@ -59,6 +71,21 @@ function App() {
           />
           <Route path="/emails" element={isLoggedIn ? 
                                                 <Emails token={token} />
+                                                : <Login onLoginSuccess={handleLoginSuccess} 
+                                  />}
+          />
+          <Route path="/addEmployee" element={isLoggedIn ? 
+                                                <AddEmployee token={token} />
+                                                : <Login onLoginSuccess={handleLoginSuccess} 
+                                  />}
+          />
+          <Route path="/addVendor" element={isLoggedIn ? 
+                                                <AddVendor token={token} />
+                                                : <Login onLoginSuccess={handleLoginSuccess} 
+                                  />}
+          />
+          <Route path="/sendMails" element={isLoggedIn ? 
+                                                <SendEmails token={token} />
                                                 : <Login onLoginSuccess={handleLoginSuccess} 
                                   />}
           />
