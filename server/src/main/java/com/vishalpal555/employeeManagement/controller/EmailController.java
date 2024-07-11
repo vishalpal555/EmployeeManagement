@@ -50,6 +50,21 @@ public class EmailController {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 
+    @PostMapping("/sendToVendors")
+    public ResponseEntity<Object> sendMail(@RequestBody List<String> emailList){
+        try {
+            LOGGER.info("called /mail/sendToVendors ");
+            if(emailList.stream().allMatch(email -> EMAIL_PATTERN.matcher(email).matches())) {
+                return emailService.sendAndSaveEmailList(emailList);
+            } else {
+                return ResponseEntity.status(HttpStatus.FAILED_DEPENDENCY).body("Email type is wrong");
+            }
+        } catch (Exception e){
+            LOGGER.error("handled exception ", e);
+        }
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
     @GetMapping
     public ResponseEntity<?> getMails(@RequestParam(required = false) String recipient, @RequestParam(required = false) Long id){
         try {

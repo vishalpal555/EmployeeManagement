@@ -13,4 +13,5 @@ public interface EmailService {
     public ResponseEntity<List<EmailsSent>> getMailByRecipient(String recipient);
     public ResponseEntity<List<EmailsSent>> getMailBySubject(String subject);
     public ResponseEntity<EmailsSent> getMailById(Long emailId);
+    public ResponseEntity<Object> sendAndSaveEmailList(List<String> emailList);
 }

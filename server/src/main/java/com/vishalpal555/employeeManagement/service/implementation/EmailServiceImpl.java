@@ -1,8 +1,10 @@
 package com.vishalpal555.employeeManagement.service.implementation;
 
 import com.vishalpal555.employeeManagement.pojo.EmailsSent;
+import com.vishalpal555.employeeManagement.pojo.Vendor;
 import com.vishalpal555.employeeManagement.repository.EmailsSentRepoInterface;
 import com.vishalpal555.employeeManagement.service.EmailService;
+import com.vishalpal555.employeeManagement.service.VendorService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.slf4j.Logger;
@@ -29,6 +31,8 @@ public class EmailServiceImpl implements EmailService {
     private JavaMailSender emailSender;
     @Autowired
     private EmailsSentRepoInterface emailsSentRepoInterface;
+    @Autowired
+    private VendorService vendorService;
 
     @Override
     public void sendEmail(String to, String subject, String body) throws MessagingException {
@@ -49,6 +53,30 @@ public class EmailServiceImpl implements EmailService {
             return ResponseEntity.ok().build();
         } catch (MessagingException e){
             LOGGER.error("handled MessagingException ", e);
+        } catch (Exception e){
+            LOGGER.error("handled exception ", e);
+        }
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
+    @Override
+    public ResponseEntity<Object> sendAndSaveEmailList(List<String> emailList){
+        try {
+            emailList.parallelStream().forEach(email -> {
+                Optional<Vendor> vendor = vendorService.getVendorByEmail(email);
+                if (vendor.isPresent()) {
+                    final String body = String.format(
+                            "Sending payments to vendor %s at UPI %s",
+                            vendor.get().getName(),
+                            vendor.get().getUpiId()
+                    );
+                    final String subject = "Payment to vendor";
+                    sendAndSaveEmail(vendor.get().getEmail(), subject, body);
+                } else {
+                    LOGGER.error("Email:{} not present", email);
+                }
+            });
+            return ResponseEntity.ok().build();
         } catch (Exception e){
             LOGGER.error("handled exception ", e);
         }
