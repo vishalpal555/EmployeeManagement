@@ -10,7 +10,7 @@ function AddVendor({token}) {
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setEmployeeData({ ...employeeData, [name]: value });
+    setVendorData({ ...vendorData, [name]: value });
   };
 
   const handleSubmit = async (event) => {
@@ -18,9 +18,9 @@ function AddVendor({token}) {
 
     try {
         axios.defaults.headers.common['Authorization'] = `Bearer=${token}`;
-        const response = await axios.post('http://127.0.0.1:9090/vendor/add', employeeData);
+        const response = await axios.post('http://127.0.0.1:9090/vendor/add', vendorData);
         console.log('Employee added successfully:', response.data);
-        setEmployeeData({ email: '', name: '', upiId: ''});
+        setVendorData({ email: '', name: '', upiId: ''});
     } catch (error) {
       console.error('Error adding vendor:', error);
     }
